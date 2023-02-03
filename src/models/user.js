@@ -10,15 +10,18 @@ module.exports = (sequelize) => {
          * The `models/index` file will call this method automatically.
          */
         static associate({ RefreshToken }) {
-            this.hasMany(RefreshToken)
+            this.hasMany(RefreshToken, {
+                foreignKey: "userId",
+            })
         }
 
-        toJSON(data) {
+        toJSON() {
             return {
                 ...super.toJSON(),
                 passwordHash: undefined,
                 createdAt: undefined,
                 updatedAt: undefined,
+                role: undefined,
             }
         }
     }
@@ -28,6 +31,11 @@ module.exports = (sequelize) => {
             email: { type: DataTypes.STRING, allowNull: false },
             passwordHash: { type: DataTypes.STRING, allowNull: false },
             avatar: DataTypes.STRING,
+            role: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: "user",
+            },
         },
         {
             sequelize,

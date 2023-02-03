@@ -2,6 +2,7 @@ require("express-async-errors")
 
 const express = require("express")
 const cors = require("cors")
+const logger = require("morgan")
 const router = require("./routes")
 const db = require("./models")
 const handleNotFound = require("./middlewares/handle-not-found")
@@ -9,6 +10,8 @@ const handleException = require("./middlewares/handle-exception")
 const envConfig = require("./config/env-config")
 
 const app = express()
+
+app.use(logger("dev"))
 
 app.use(
     cors({
@@ -34,7 +37,7 @@ const start = async () => {
         await db.sequelize.sync()
         app.listen(
             envConfig.PORT,
-            console.log("Server is running on port " + envConfig.PORT)
+            console.log("😏 Server is running on port " + envConfig.PORT)
         )
     } catch (error) {
         console.log(error)

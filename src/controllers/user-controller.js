@@ -1,8 +1,7 @@
 const { userService } = require("../services")
 const createError = require("http-errors")
 const { StatusCodes } = require("http-status-codes")
-
-const getAllUsers = async (req, res) => {}
+const { pick } = require("../utils")
 
 const getUserById = async (req, res) => {
     const user = await userService.getUserById(req.params.userId)
@@ -14,11 +13,26 @@ const getUserById = async (req, res) => {
         user,
     })
 }
-const createUserTest = async (req, res) => {}
-const updateUserById = async (req, res) => {}
-const deleteUserById = async (req, res) => {}
+
+const getUsers = async (req, res) => {
+    const filters = pick(req.query, ["name"])
+    const options = pick(req.query, ["sortBy", "limit", "page", "attributes"])
+    const users = await userService.queryUsers(filters, options)
+    return res.status(StatusCodes.OK).json({
+        message: "Get users successfully",
+        users,
+    })
+}
+
+const createUser = async (req, res) => {
+    const user = await userService.createUser(req.body)
+    return res
+        .status(StatusCodes.CREATED)
+        .json({ message: "User create successfully", user })
+}
 
 module.exports = {
-    getAllUsers,
     getUserById,
+    getUsers,
+    createUser,
 }

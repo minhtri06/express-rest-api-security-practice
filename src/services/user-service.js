@@ -1,4 +1,5 @@
 const { User } = require("../models")
+const { Op } = require("sequelize")
 const createError = require("http-errors")
 const authService = require("./auth-service")
 
@@ -39,7 +40,7 @@ const createUser = async (userBody) => {
     if (await checkEmailExists(userBody.email)) {
         throw createError.BadRequest("Email has been used")
     }
-    userBody.passwordHash = authService.hashPassword(password)
+    userBody.passwordHash = authService.hashPassword(userBody.password)
     return User.create(userBody)
 }
 
@@ -49,6 +50,32 @@ const createUser = async (userBody) => {
  */
 const getAllUsers = async () => {
     return User.findAll()
+}
+
+/**
+ * Query users
+ * @param {object} filters
+ * @param {string} [filters.name]
+ * @param {object} options
+ * @param {string} [options.sortBy]
+ * @param {number} [options.limit]
+ * @param {number} [options.page]
+ * @param {string} [options.attributes]
+ * @returns {Promise<InstanceType<User>[]>}
+ */
+const queryUsers = async (filters = {}, options = {}) => {
+    const queryObj = {}
+    if (filters.name) {
+        queryObj.where = { name: { [Op.like]: `%${filters.name}%` } }
+    }
+    if (options.attributes) {
+        queryObj.attributes = options.attributes.split(",")
+    }
+    queryObj.limit = options.limit || 10
+    const page = options.page || 1
+    queryObj.offset = (page - 1) * queryObj.limit
+
+    return await User.findAll(queryObj)
 }
 
 /**
@@ -83,6 +110,7 @@ const userService = {
     createUser,
     getUserByEmail,
     getAllUsers,
+    queryUsers,
     updateUserById,
     deleteUserById,
 }
