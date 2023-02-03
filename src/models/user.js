@@ -1,52 +1,50 @@
 "use strict"
-const { Model } = require("sequelize")
-const { DataTypes } = require("sequelize")
+const { Model, DataTypes } = require("sequelize")
+const sequelize = require("../config/sequelize")
 
-module.exports = (sequelize) => {
-    class User extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
-        static associate({ RefreshToken }) {
-            this.hasMany(RefreshToken, {
-                foreignKey: "userId",
-            })
-        }
+class User extends Model {
+    static associate({ RefreshToken, Deck }) {
+        this.hasMany(RefreshToken, {
+            foreignKey: "userId",
+        })
+        this.hasMany(Deck, {
+            foreignKey: "ownerId",
+        })
+    }
 
-        toJSON() {
-            return {
-                ...super.toJSON(),
-                passwordHash: undefined,
-                createdAt: undefined,
-                updatedAt: undefined,
-                role: undefined,
-            }
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            passwordHash: undefined,
+            createdAt: undefined,
+            updatedAt: undefined,
+            role: undefined,
         }
     }
-    User.init(
-        {
-            name: { type: DataTypes.STRING, allowNull: false },
-            email: { type: DataTypes.STRING, allowNull: false },
-            passwordHash: { type: DataTypes.STRING, allowNull: false },
-            avatar: DataTypes.STRING,
-            role: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                defaultValue: "user",
-            },
-        },
-        {
-            sequelize,
-            modelName: "User",
-            indexes: [
-                {
-                    unique: true,
-                    fields: ["email"],
-                },
-            ],
-        }
-    )
-    return User
 }
+
+User.init(
+    {
+        name: { type: DataTypes.STRING, allowNull: false },
+        email: { type: DataTypes.STRING, allowNull: false },
+        passwordHash: { type: DataTypes.STRING, allowNull: false },
+        avatar: DataTypes.STRING,
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "user",
+        },
+    },
+    {
+        sequelize,
+        modelName: "User",
+        indexes: [
+            {
+                unique: true,
+                fields: ["email"],
+            },
+        ],
+    }
+)
+
+module.exports = User

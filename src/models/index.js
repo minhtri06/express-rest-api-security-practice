@@ -1,26 +1,12 @@
 "use strict"
-
 const { Sequelize } = require("sequelize")
-const envConfig = require("../config/env-config")
-const dbConfig = envConfig.db[envConfig.NODE_ENV]
+const sequelize = require("../config/sequelize")
 
-let sequelize
-sequelize = new Sequelize(
-    dbConfig.DATABASE,
-    dbConfig.USERNAME,
-    dbConfig.PASSWORD,
-    {
-        host: dbConfig.HOST,
-        dialect: dbConfig.DIALECT,
-        logging: dbConfig.LOGGING,
-        raw: true,
-    }
-)
-
-const User = require("./user")(sequelize)
-const RefreshToken = require("./refresh-token")(sequelize)
-
-const db = { User, RefreshToken }
+const db = {
+    User: require("./user"),
+    RefreshToken: require("./refresh-token"),
+    Deck: require("./deck"),
+}
 
 Object.keys(db).forEach((modelName) => {
     if (db[modelName].associate) {

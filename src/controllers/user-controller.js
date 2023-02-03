@@ -3,6 +3,7 @@ const createError = require("http-errors")
 const { StatusCodes } = require("http-status-codes")
 const { pick } = require("../utils")
 
+/** @type {import("express").RequestHandler} */
 const getUserById = async (req, res) => {
     const user = await userService.getUserById(req.params.userId)
     if (!user) {
@@ -14,6 +15,7 @@ const getUserById = async (req, res) => {
     })
 }
 
+/** @type {import("express").RequestHandler} */
 const getUsers = async (req, res) => {
     const filters = pick(req.query, ["name"])
     const options = pick(req.query, ["sortBy", "limit", "page", "attributes"])
@@ -24,6 +26,7 @@ const getUsers = async (req, res) => {
     })
 }
 
+/** @type {import("express").RequestHandler} */
 const createUser = async (req, res) => {
     const user = await userService.createUser(req.body)
     return res
@@ -31,8 +34,18 @@ const createUser = async (req, res) => {
         .json({ message: "User create successfully", user })
 }
 
+/** @type {import("express").RequestHandler} */
+const updateUserById = async (req, res) => {
+    const { userId } = req.params
+    await userService.updateUserById(userId, req.body)
+    return res.status(StatusCodes.OK).json({
+        message: "Update user successfully",
+    })
+}
+
 module.exports = {
     getUserById,
     getUsers,
     createUser,
+    updateUserById,
 }

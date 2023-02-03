@@ -31,6 +31,11 @@ const checkEmailExists = async (email) => {
     return user !== null
 }
 
+const checkExistById = async (userId) => {
+    const user = await User.findByPk(userId)
+    return user !== null
+}
+
 /**
  * Create a user
  * @param {object} userBody
@@ -64,9 +69,9 @@ const getAllUsers = async () => {
  * @returns {Promise<InstanceType<User>[]>}
  */
 const queryUsers = async (filters = {}, options = {}) => {
-    const queryObj = {}
+    const queryObj = { where: {} }
     if (filters.name) {
-        queryObj.where = { name: { [Op.like]: `%${filters.name}%` } }
+        queryObj.where.name = { [Op.like]: `%${filters.name}%` }
     }
     if (options.attributes) {
         queryObj.attributes = options.attributes.split(",")
@@ -89,7 +94,7 @@ const updateUserById = async (id, updateBody) => {
     if (!user) {
         throw createError.NotFound("User not found")
     }
-    if (!updateBody.email || (await checkEmailExists(updateBody.email))) {
+    if (updateBody.email && (await checkEmailExists(updateBody.email))) {
         throw createError.BadRequest("Email has been used")
     }
     await user.update(updateBody)
@@ -107,6 +112,7 @@ const deleteUserById = async (id) => {
 
 const userService = {
     getUserById,
+    checkExistById,
     createUser,
     getUserByEmail,
     getAllUsers,
