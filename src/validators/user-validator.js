@@ -1,4 +1,5 @@
 const Joi = require("joi")
+const customValidators = require("./custom")
 const { BODY, PARAMS, QUERY } = require("../utils").commonConstants
 
 const getUserById = {
@@ -10,7 +11,7 @@ const getUserById = {
 const getUsers = {
     [QUERY]: Joi.object({
         name: Joi.string(),
-        sortBy: Joi.string(),
+        sortBy: Joi.string().custom(customValidators.sortBy(["name"])),
         limit: Joi.number().integer(),
         page: Joi.number().integer(),
         attributes: Joi.string(),

@@ -21,7 +21,10 @@ const queryDeck = async (reqQuery) => {
     if (reqQuery.name) {
         queryOptions.where.name = { [Op.like]: `%${reqQuery.name}%` }
     }
-    console.log(reqQuery)
+    if (reqQuery.numericFilters) {
+        Object.assign(queryOptions.where, reqQuery.numericFilters)
+    }
+
     return Deck.findAll(queryOptions)
 }
 

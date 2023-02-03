@@ -1,7 +1,6 @@
 const { userService } = require("../services")
 const createError = require("http-errors")
 const { StatusCodes } = require("http-status-codes")
-const { pick } = require("../utils")
 
 /** @type {import("express").RequestHandler} */
 const getUserById = async (req, res) => {
@@ -17,9 +16,7 @@ const getUserById = async (req, res) => {
 
 /** @type {import("express").RequestHandler} */
 const getUsers = async (req, res) => {
-    const filters = pick(req.query, ["name"])
-    const options = pick(req.query, ["sortBy", "limit", "page", "attributes"])
-    const users = await userService.queryUsers(filters, options)
+    const users = await userService.queryUsers(req.query)
     return res.status(StatusCodes.OK).json({
         message: "Get users successfully",
         users,

@@ -59,28 +59,30 @@ const getAllUsers = async () => {
 
 /**
  * Query users
- * @param {object} filters
- * @param {string} [filters.name]
- * @param {object} options
- * @param {string} [options.sortBy]
- * @param {number} [options.limit]
- * @param {number} [options.page]
- * @param {string} [options.attributes]
+ * @param {object} reqQuery
+ * @param {string} [reqQuery.name]
+ * @param {string} [reqQuery.sortBy]
+ * @param {number} [reqQuery.limit]
+ * @param {number} [reqQuery.page]
+ * @param {string} [reqQuery.attributes]
  * @returns {Promise<InstanceType<User>[]>}
  */
-const queryUsers = async (filters = {}, options = {}) => {
-    const queryObj = { where: {} }
-    if (filters.name) {
-        queryObj.where.name = { [Op.like]: `%${filters.name}%` }
+const queryUsers = async (reqQuery) => {
+    const queryOptions = { where: {} }
+    if (reqQuery.name) {
+        queryOptions.where.name = { [Op.like]: `%${reqQuery.name}%` }
     }
-    if (options.attributes) {
-        queryObj.attributes = options.attributes.split(",")
+    if (reqQuery.attributes) {
+        queryOptions.attributes = reqQuery.attributes.split(",")
     }
-    queryObj.limit = options.limit || 10
-    const page = options.page || 1
-    queryObj.offset = (page - 1) * queryObj.limit
+    if (reqQuery.sortBy) {
+        queryOptions.order = reqQuery.sortBy
+    }
+    queryOptions.limit = reqQuery.limit || 10
+    const page = reqQuery.page || 1
+    queryOptions.offset = (page - 1) * queryOptions.limit
 
-    return await User.findAll(queryObj)
+    return await User.findAll(queryOptions)
 }
 
 /**
