@@ -103,6 +103,11 @@ const updateUserById = async (id, updateBody) => {
     return user
 }
 
+/**
+ *
+ * @param {number} id
+ * @returns {Promise<InstanceType<User>>}
+ */
 const deleteUserById = async (id) => {
     const user = await User.findByPk(id)
     if (!user) {

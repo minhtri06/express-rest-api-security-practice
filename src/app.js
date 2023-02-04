@@ -16,7 +16,7 @@ app.use(logger("dev"))
 app.use(
     cors({
         origin: envConfig.CLIENT_URL,
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     })
 )
 
