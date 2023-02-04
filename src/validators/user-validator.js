@@ -21,7 +21,7 @@ const getUsers = {
 const createUser = {
     [BODY]: Joi.object({
         name: Joi.string().required(),
-        email: Joi.string().required(),
+        email: Joi.string().required().email(),
         password: Joi.string().alphanum().required().min(6).max(30),
     }),
 }

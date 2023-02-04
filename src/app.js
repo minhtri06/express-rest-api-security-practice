@@ -2,6 +2,7 @@ require("express-async-errors")
 
 const express = require("express")
 const cors = require("cors")
+const helmet = require("helmet")
 const logger = require("morgan")
 const router = require("./routes")
 const db = require("./models")
@@ -11,14 +12,15 @@ const envConfig = require("./config/env-config")
 
 const app = express()
 
-app.use(logger("dev"))
-
+app.use(helmet())
 app.use(
     cors({
         origin: envConfig.CLIENT_URL,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     })
 )
+
+app.use(logger("dev"))
 
 app.use(express.json())
 app.use(
