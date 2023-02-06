@@ -5,6 +5,7 @@ const commonElements = {
     user: {
         password: Joi.string().alphanum().min(6).max(30),
         email: Joi.string().email(),
+        role: Joi.string().valid("user", "admin", "mod"),
     },
     query: {
         limit: Joi.number().integer(),

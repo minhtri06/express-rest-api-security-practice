@@ -6,16 +6,11 @@ const { BODY, PARAMS, QUERY } = require("../utils").commonConstants
 const getUsers = {
     [QUERY]: Joi.object({
         name: Joi.string(),
+        role: Joi.string(),
         sortBy: commonElements.query.sortBy(["name"]),
         limit: commonElements.query.limit,
         page: commonElements.query.page,
         attributes: commonElements.query.attributes,
-    }),
-}
-
-const getUserById = {
-    [PARAMS]: Joi.object({
-        userId: Joi.number().integer().required(),
     }),
 }
 
@@ -25,6 +20,13 @@ const createUser = {
         email: commonElements.user.email.required(),
         password: commonElements.user.password.required(),
         avatar: Joi.string(),
+        role: commonElements.user.role.required(),
+    }),
+}
+
+const getUserById = {
+    [PARAMS]: Joi.object({
+        userId: Joi.number().integer().required(),
     }),
 }
 
