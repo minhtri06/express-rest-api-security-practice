@@ -2,6 +2,7 @@ const { Op } = require("sequelize")
 const createError = require("http-errors")
 const bcrypt = require("bcryptjs")
 const { User } = require("../models")
+const roleConfig = require("../config/roles")
 
 /**
  *
@@ -98,6 +99,24 @@ const createUser = async (userBody) => {
     return User.create(userBody)
 }
 
+const updateUserById = async (id, updateBody) => {
+    const user = await getUserById(id)
+    if (!user) {
+        throw createError.NotFound("User not found")
+    }
+    if (
+        updateBody.email &&
+        user.email !== updateBody.email &&
+        (await checkEmailExist(updateBody.email))
+    ) {
+        throw createError.BadRequest("Email has been used")
+    }
+    if (updateBody.password) {
+        updateBody.passwordHash = await hashPassword(updateBody.password)
+    }
+    return user.update(updateBody)
+}
+
 module.exports = {
     hashPassword,
     getUsers,
@@ -106,4 +125,5 @@ module.exports = {
     getUserByEmail,
     checkEmailExist,
     createUser,
+    updateUserById,
 }

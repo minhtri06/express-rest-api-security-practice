@@ -30,7 +30,7 @@ User.init(
         passwordHash: { type: DataTypes.STRING, allowNull: false },
         avatar: DataTypes.STRING,
         role: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM("user", "admin"),
             allowNull: false,
             defaultValue: "user",
         },

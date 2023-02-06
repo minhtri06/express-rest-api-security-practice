@@ -10,5 +10,6 @@ router
 router
     .route("/:userId")
     .get(validate(userValidator.getUserById), userController.getUserById)
+    .patch(validate(userValidator.updateUserById), userController.updateUserById)
 
 module.exports = router

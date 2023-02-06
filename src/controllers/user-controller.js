@@ -23,6 +23,10 @@ const getUserById = async (req, res) => {
     return res.status(StatusCodes.OK).json({ user })
 }
 
-const updateUser = async (req, res) => {}
+/** @type {import("express").RequestHandler} */
+const updateUserById = async (req, res) => {
+    const user = await userService.updateUserById(req.params.userId, req.body)
+    return res.status(StatusCodes.OK).json({ user })
+}
 
-module.exports = { getUsers, createUser, getUserById, updateUser }
+module.exports = { getUsers, createUser, getUserById, updateUserById }
