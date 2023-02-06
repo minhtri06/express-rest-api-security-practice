@@ -26,7 +26,14 @@ const getUserById = async (req, res) => {
 /** @type {import("express").RequestHandler} */
 const updateUserById = async (req, res) => {
     const user = await userService.updateUserById(req.params.userId, req.body)
-    return res.status(StatusCodes.OK).json({ user })
+
+    return res.status(StatusCodes.OK).json({ message: "Success", user })
 }
 
-module.exports = { getUsers, createUser, getUserById, updateUserById }
+/** @type {import("express").RequestHandler} */
+const deleteUserById = async (req, res) => {
+    await userService.deleteUserById(req.params.userId)
+    return res.status(StatusCodes.OK).json({ message: "Success" })
+}
+
+module.exports = { getUsers, createUser, getUserById, updateUserById, deleteUserById }

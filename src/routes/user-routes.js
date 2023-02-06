@@ -11,5 +11,6 @@ router
     .route("/:userId")
     .get(validate(userValidator.getUserById), userController.getUserById)
     .patch(validate(userValidator.updateUserById), userController.updateUserById)
+    .delete(validate(userValidator.deleteUserById), userController.deleteUserById)
 
 module.exports = router

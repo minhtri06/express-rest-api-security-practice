@@ -41,11 +41,18 @@ const updateUserById = {
     }),
 }
 
+const deleteUserById = {
+    [PARAMS]: Joi.object({
+        userId: Joi.number().integer().required(),
+    }),
+}
+
 const userValidator = {
     getUserById,
     getUsers,
     createUser,
     updateUserById,
+    deleteUserById,
 }
 
 module.exports = userValidator

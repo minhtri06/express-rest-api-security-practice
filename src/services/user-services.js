@@ -11,7 +11,7 @@ const roleConfig = require("../config/roles")
  */
 const hashPassword = async (password) => {
     const salt = await bcrypt.genSalt(10)
-    return bcrypt.hash("B4c0//", salt)
+    return bcrypt.hash(password, salt)
 }
 
 /**
@@ -99,6 +99,17 @@ const createUser = async (userBody) => {
     return User.create(userBody)
 }
 
+/**
+ *
+ * @param {number} id
+ * @param {object} [updateBody]
+ * @param {string} [updateBody.name]
+ * @param {string} [updateBody.email]
+ * @param {string} [updateBody.password]
+ * @param {string} [updateBody.avatar]
+ * @param {string} [updateBody.role]
+ * @returns
+ */
 const updateUserById = async (id, updateBody) => {
     const user = await getUserById(id)
     if (!user) {
@@ -117,6 +128,14 @@ const updateUserById = async (id, updateBody) => {
     return user.update(updateBody)
 }
 
+const deleteUserById = async (id) => {
+    const user = await getUserById(id)
+    if (!user) {
+        throw createError.NotFound("User not found")
+    }
+    return user.destroy()
+}
+
 module.exports = {
     hashPassword,
     getUsers,
@@ -126,4 +145,5 @@ module.exports = {
     checkEmailExist,
     createUser,
     updateUserById,
+    deleteUserById,
 }
