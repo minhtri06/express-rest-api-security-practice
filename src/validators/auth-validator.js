@@ -2,13 +2,6 @@ const Joi = require("joi")
 const commonElements = require("./utils/common-elements")
 const { BODY, PARAMS, QUERY } = require("../utils").commonConstants
 
-const login = {
-    [BODY]: Joi.object({
-        email: commonElements.user.email.required(),
-        password: commonElements.user.password.required(),
-    }),
-}
-
 const register = {
     [BODY]: Joi.object({
         email: commonElements.user.email.required(),
@@ -18,7 +11,21 @@ const register = {
     }),
 }
 
+const login = {
+    [BODY]: Joi.object({
+        email: commonElements.user.email.required(),
+        password: commonElements.user.password.required(),
+    }),
+}
+
+const logout = {
+    [BODY]: Joi.object({
+        refreshToken: Joi.string().required(),
+    }),
+}
+
 module.exports = {
-    login,
     register,
+    login,
+    logout,
 }

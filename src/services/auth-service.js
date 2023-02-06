@@ -1,6 +1,8 @@
+const jwt = require("jsonwebtoken")
+const createError = require("http-errors")
 const userService = require("./user-services")
 const tokenService = require("./token-service")
-const createError = require("http-errors")
+const envConfig = require("../config/env-config")
 
 const register = async (userBody) => {
     userBody.role = "user"
@@ -10,7 +12,7 @@ const register = async (userBody) => {
 }
 
 /**
- *
+ * Login (return user and auth tokens)
  * @param {string} email
  * @param {string} password
  */
@@ -23,4 +25,12 @@ const login = async (email, password) => {
     return { user, authTokens }
 }
 
-module.exports = { register, login }
+const logout = async (refreshToken) => {
+    const rTokenIns = await tokenService.getRefreshTokenByToken(refreshToken)
+    if (!rTokenIns) {
+        throw createError.NotFound("Not found")
+    }
+    await rTokenIns.destroy()
+}
+
+module.exports = { register, login, logout }

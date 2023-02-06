@@ -3,17 +3,19 @@ const createError = require("http-errors")
 const { PRODUCTION } = require("../utils").commonConstants
 
 const handleException = async (err, req, res, next) => {
-    const [statusCode, message] =
-        err instanceof createError.HttpError
-            ? [err.statusCode, err.message]
-            : [500, "Something went wrong"]
     if (envConfig.NODE_ENV !== PRODUCTION) {
-        if (!(err instanceof createError.HttpError)) {
+        if (err instanceof createError.HttpError) {
+            return res.status(err.statusCode).json({ error: err.message })
+        } else {
             console.log(err)
+            return res.status(500).json({ error: err.message })
         }
-        return res.status(statusCode).json({ error: message })
     } else {
-        return res.status(statusCode).json({ error: message })
+        if (err instanceof createError.HttpError) {
+            return res.status(err.statusCode).json({ error: err.message })
+        } else {
+            return res.status(500).json({ error: "Something went wrong" })
+        }
     }
 }
 

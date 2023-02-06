@@ -14,4 +14,10 @@ const login = async (req, res) => {
     return res.json({ message: "Login successfully", user, authTokens })
 }
 
-module.exports = { registerUser, login }
+/** @type {import("express").RequestHandler} */
+const logout = async (req, res) => {
+    await authService.logout(req.body.refreshToken)
+    return res.json({ message: "Logout successfully" })
+}
+
+module.exports = { registerUser, login, logout }

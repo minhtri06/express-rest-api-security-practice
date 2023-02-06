@@ -9,6 +9,8 @@ const db = require("./models")
 const handleNotFound = require("./middlewares/handle-not-found")
 const handleException = require("./middlewares/handle-exception")
 const envConfig = require("./config/env-config")
+const jwtStrategy = require("./middlewares/passport")
+const passport = require("passport")
 
 const app = express()
 
@@ -28,6 +30,9 @@ app.use(
         extended: true,
     })
 )
+
+app.use(passport.initialize())
+passport.use("jwt", jwtStrategy)
 
 app.use("/api/v1/", router)
 

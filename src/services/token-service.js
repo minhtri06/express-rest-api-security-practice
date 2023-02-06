@@ -27,7 +27,7 @@ const generateToken = (userId, expires, type) => {
  */
 const createAccessToken = (userId) => {
     const expires = moment().add(ACCESS_EXPIRATION_MINUTES, "minutes")
-    return generateToken(userId, expires, ACCESS)
+    return `Bearer ${generateToken(userId, expires, ACCESS)}`
 }
 
 /**
@@ -52,4 +52,13 @@ const createAuthTokens = async (userId) => {
     return { accessToken, refreshToken: refreshTokenIns.token }
 }
 
-module.exports = { createAccessToken, createRefreshToken, createAuthTokens }
+const getRefreshTokenByToken = async (refreshToken) => {
+    return RefreshToken.findOne({ where: { token: refreshToken } })
+}
+
+module.exports = {
+    createAccessToken,
+    createRefreshToken,
+    createAuthTokens,
+    getRefreshTokenByToken,
+}
