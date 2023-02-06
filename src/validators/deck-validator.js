@@ -1,12 +1,14 @@
 const Joi = require("joi")
-const customValidators = require("./custom")
+const customValidation = require("./utils/custom-validation")
 const { BODY, QUERY, PARAMS } = require("../utils").commonConstants
 
 const getDecks = {
     [QUERY]: Joi.object().keys({
         name: Joi.string(),
         ownerId: Joi.number().integer(),
-        numericFilters: Joi.string().custom(customValidators.numericFilters(["total"])),
+        numericFilters: Joi.string().custom(
+            customValidation.query.numericFilters(["total"])
+        ),
     }),
 }
 
