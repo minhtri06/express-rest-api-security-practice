@@ -15,6 +15,16 @@ const hashPassword = async (password) => {
 }
 
 /**
+ * Verify password with password hash
+ * @param {string} password
+ * @param {string} hash
+ * @returns {Promise<Boolean>}
+ */
+const verifyPassword = async (password, hash) => {
+    return bcrypt.compare(password, hash)
+}
+
+/**
  * Get users by query option
  * @param {object} options
  * @param {string} [options.name]
@@ -136,8 +146,17 @@ const deleteUserById = async (id) => {
     return user.destroy()
 }
 
+const getUserByEmailAndPassword = async (email, password) => {
+    const user = await getUserByEmail(email)
+    if (!user || !(await verifyPassword(password, user.passwordHash))) {
+        return null
+    }
+    return user
+}
+
 module.exports = {
     hashPassword,
+    verifyPassword,
     getUsers,
     getAllUsers,
     getUserById,
@@ -146,4 +165,5 @@ module.exports = {
     createUser,
     updateUserById,
     deleteUserById,
+    getUserByEmailAndPassword,
 }
