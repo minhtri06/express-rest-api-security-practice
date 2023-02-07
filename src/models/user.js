@@ -19,6 +19,7 @@ class User extends Model {
             createdAt: undefined,
             updatedAt: undefined,
             role: undefined,
+            googleId: undefined,
         }
     }
 }

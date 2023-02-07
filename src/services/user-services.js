@@ -93,11 +93,21 @@ const getUserByGoogleId = async (googleId) => {
 
 /**
  * Check email exists or not
+ * @param {number} id
+ * @returns {Promise<Boolean>}
+ */
+const checkIdExist = async (id) => {
+    const user = await User.findByPk(id)
+    return user !== null
+}
+
+/**
+ * Check email exists or not
  * @param {string} email
  * @returns {Promise<Boolean>}
  */
 const checkEmailExist = async (email) => {
-    const user = await getUserByEmail(email)
+    const user = await User.findOne({ where: { email } })
     return user !== null
 }
 
@@ -166,7 +176,7 @@ const getUserByEmailAndPassword = async (email, password) => {
     return user
 }
 
-module.exports = {
+const userService = {
     hashPassword,
     verifyPassword,
     getUsers,
@@ -175,8 +185,11 @@ module.exports = {
     getUserByEmail,
     getUserByGoogleId,
     checkEmailExist,
+    checkIdExist,
     createUser,
     updateUserById,
     deleteUserById,
     getUserByEmailAndPassword,
 }
+
+module.exports = userService

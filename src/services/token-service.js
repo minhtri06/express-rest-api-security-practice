@@ -73,12 +73,22 @@ const getRefreshTokenAndVerify = async (token) => {
     return [refreshToken, payload]
 }
 
+/**
+ * Delete all refresh tokens of a user
+ * @param {number} userId
+ * @returns {Promise}
+ */
+const deleteAllRefreshTokensOfAUser = async (userId) => {
+    RefreshToken.destroy({ where: { userId } })
+}
+
 const tokenService = {
     createAccessToken,
     createRefreshToken,
     createAuthTokens,
     getRefreshTokenByToken,
     getRefreshTokenAndVerify,
+    deleteAllRefreshTokensOfAUser,
 }
 
 module.exports = tokenService

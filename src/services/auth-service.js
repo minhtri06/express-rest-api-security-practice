@@ -2,10 +2,9 @@ const jwt = require("jsonwebtoken")
 const createError = require("http-errors")
 const userService = require("./user-services")
 const tokenService = require("./token-service")
+const blacklistUserService = require("./blacklist-user-service")
 const envConfig = require("../config/env-config")
 const { ACCESS, REFRESH } = require("../utils").commonConstants
-
-const blackListUsers = new Set()
 
 const register = async (userBody) => {
     userBody.role = "user"
@@ -25,7 +24,8 @@ const login = async (email, password) => {
         throw createError.BadRequest("Wrong email or password")
     }
     const authTokens = await tokenService.createAuthTokens(user.id)
-    blackListUsers.delete(user.id)
+    // blackListUsers.delete(user.id)
+    blacklistUserService.removeUserFromBlacklist(user.id)
     return { user, authTokens }
 }
 
@@ -48,7 +48,9 @@ const refreshAuthTokens = async (refreshToken) => {
         )
         if (!refreshTokenIns) {
             if (payload.type === REFRESH) {
-                blackListUsers.add(payload.sub)
+                // blackListUsers.add(payload.sub)
+                await blacklistUserService.addUserToBlackList(payload.sub)
+                await tokenService.deleteAllRefreshTokensOfAUser(payload.sub)
             }
             throw createError.Unauthorized("Unauthorized")
         }
@@ -70,7 +72,6 @@ const refreshAuthTokens = async (refreshToken) => {
 }
 
 module.exports = {
-    blackListUsers,
     register,
     login,
     loginByGoogle,

@@ -5,10 +5,7 @@ const envConfig = require("../config/env-config")
 const { ACCESS } = require("../utils").commonConstants
 const createError = require("http-errors")
 const { User } = require("../models")
-const {
-    userService,
-    authService: { blackListUsers },
-} = require("../services")
+const { userService, blacklistUserService } = require("../services")
 
 const jwtStrategy = new JwtStrategy(
     {
@@ -22,7 +19,7 @@ const jwtStrategy = new JwtStrategy(
                 throw createError.Unauthorized("Invalid token")
             }
             const user = await User.findByPk(payload.sub)
-            if (!user || blackListUsers.has(user.id)) {
+            if (!user || (await blacklistUserService.checkUserIsInBlacklist(user.id))) {
                 return done(null, false)
             }
             req.user = user
@@ -54,7 +51,6 @@ const googlePlusTokenStrategy = new GooglePlusTokenStrategy(
             req.user = user
             done(null, user)
         } catch (error) {
-            // console.log(error)
             done(error, false)
         }
     }
