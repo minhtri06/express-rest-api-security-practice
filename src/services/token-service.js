@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 const moment = require("moment")
+const createError = require("http-errors")
 const { RefreshToken } = require("../models")
 const { REFRESH, ACCESS } = require("../utils").commonConstants
 const { SECRET_KEY, REFRESH_EXPIRATION_DAYS, ACCESS_EXPIRATION_MINUTES } =
@@ -52,13 +53,32 @@ const createAuthTokens = async (userId) => {
     return { accessToken, refreshToken: refreshTokenIns.token }
 }
 
-const getRefreshTokenByToken = async (refreshToken) => {
-    return RefreshToken.findOne({ where: { token: refreshToken } })
+const getRefreshTokenByToken = async (token) => {
+    return RefreshToken.findOne({ where: { token } })
 }
 
-module.exports = {
+/**
+ * Get refresh token and verify
+ * @param {string} token
+ * @returns {Promise<[InstanceType<RefreshToken>, object]>}
+ */
+const getRefreshTokenAndVerify = async (token) => {
+    const payload = jwt.verify(token, SECRET_KEY)
+    if (payload.type !== REFRESH) {
+        return [null, payload]
+    }
+    const refreshToken = await RefreshToken.findOne({
+        where: { token, userId: payload.sub },
+    })
+    return [refreshToken, payload]
+}
+
+const tokenService = {
     createAccessToken,
     createRefreshToken,
     createAuthTokens,
     getRefreshTokenByToken,
+    getRefreshTokenAndVerify,
 }
+
+module.exports = tokenService

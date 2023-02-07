@@ -15,9 +15,21 @@ const login = async (req, res) => {
 }
 
 /** @type {import("express").RequestHandler} */
+const loginByGoogle = async (req, res) => {
+    const authTokens = await authService.loginByGoogle(req.user.id)
+    res.json({ message: "Login successfully", user: req.user, authTokens })
+}
+
+/** @type {import("express").RequestHandler} */
 const logout = async (req, res) => {
     await authService.logout(req.body.refreshToken)
     return res.json({ message: "Logout successfully" })
 }
 
-module.exports = { registerUser, login, logout }
+/** @type {import("express").RequestHandler} */
+const refreshToken = async (req, res) => {
+    const [user, authTokens] = await authService.refreshAuthTokens(req.body.refreshToken)
+    return res.json({ user, authTokens })
+}
+
+module.exports = { registerUser, login, loginByGoogle, logout, refreshToken }

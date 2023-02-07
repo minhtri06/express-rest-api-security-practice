@@ -9,4 +9,8 @@ module.exports = {
     ACCESS: "access",
     USER: "user",
     ADMIN: "admin",
+    rights: {
+        GET_USERS: "getUsers",
+        MANAGE_USERS: "manageUsers",
+    },
 }

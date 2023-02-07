@@ -9,7 +9,7 @@ const db = require("./models")
 const handleNotFound = require("./middlewares/handle-not-found")
 const handleException = require("./middlewares/handle-exception")
 const envConfig = require("./config/env-config")
-const jwtStrategy = require("./middlewares/passport")
+const { jwtStrategy, googlePlusTokenStrategy } = require("./middlewares/passport")
 const passport = require("passport")
 
 const app = express()
@@ -33,6 +33,7 @@ app.use(
 
 app.use(passport.initialize())
 passport.use("jwt", jwtStrategy)
+passport.use("google-plus-token", googlePlusTokenStrategy)
 
 app.use("/api/v1/", router)
 

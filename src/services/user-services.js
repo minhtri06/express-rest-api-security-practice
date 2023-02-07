@@ -83,6 +83,15 @@ const getUserByEmail = async (email) => {
 }
 
 /**
+ * Get user by google id
+ * @param {string} googleId
+ * @returns {Promise<InstanceType<User>|null>}
+ */
+const getUserByGoogleId = async (googleId) => {
+    return User.findOne({ where: { googleId } })
+}
+
+/**
  * Check email exists or not
  * @param {string} email
  * @returns {Promise<Boolean>}
@@ -98,6 +107,7 @@ const checkEmailExist = async (email) => {
  * @param {string} [userBody.name]
  * @param {string} [userBody.email]
  * @param {string} [userBody.password]
+ * @param {string} [userBody.googleId]
  * @param {string} [userBody.avatar]
  * @param {string} [userBody.role]
  */
@@ -105,7 +115,9 @@ const createUser = async (userBody) => {
     if (await checkEmailExist(userBody.email)) {
         throw createError.BadRequest("Email has been used")
     }
-    userBody.passwordHash = await hashPassword(userBody.password)
+    if (userBody.password) {
+        userBody.passwordHash = await hashPassword(userBody.password)
+    }
     return User.create(userBody)
 }
 
@@ -161,6 +173,7 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUserByEmail,
+    getUserByGoogleId,
     checkEmailExist,
     createUser,
     updateUserById,

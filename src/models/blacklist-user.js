@@ -2,12 +2,13 @@
 const { Model, DataTypes } = require("sequelize")
 const sequelize = require("../config/sequelize")
 
-class Deck extends Model {
+class BlacklistUser extends Model {
     static associate({ User }) {
         this.belongsTo(User, {
-            foreignKey: "ownerId",
+            foreignKey: "userId",
         })
     }
+
     toJSON() {
         return {
             ...super.toJSON(),
@@ -17,17 +18,14 @@ class Deck extends Model {
     }
 }
 
-Deck.init(
+BlacklistUser.init(
     {
-        name: { type: DataTypes.STRING, allowNull: false },
-        description: { type: DataTypes.STRING },
-        total: { type: DataTypes.INTEGER, allowNull: false },
-        ownerId: { type: DataTypes.INTEGER, allowNull: false },
+        userId: { type: DataTypes.INTEGER, allowNull: false, unique: true },
     },
     {
         sequelize,
-        modelName: "Deck",
+        modelName: "BlacklistUser",
     }
 )
 
-module.exports = Deck
+module.exports = BlacklistUser

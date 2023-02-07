@@ -3,12 +3,12 @@ const { Model, DataTypes } = require("sequelize")
 const sequelize = require("../config/sequelize")
 
 class User extends Model {
-    static associate({ RefreshToken, Deck }) {
+    static associate({ RefreshToken, BlacklistUser }) {
         this.hasMany(RefreshToken, {
             foreignKey: "userId",
         })
-        this.hasMany(Deck, {
-            foreignKey: "ownerId",
+        this.hasOne(BlacklistUser, {
+            foreignKey: "userId",
         })
     }
 
@@ -27,8 +27,9 @@ User.init(
     {
         name: { type: DataTypes.STRING, allowNull: false },
         email: { type: DataTypes.STRING, allowNull: false },
-        passwordHash: { type: DataTypes.STRING, allowNull: false },
+        passwordHash: { type: DataTypes.STRING },
         avatar: DataTypes.STRING,
+        googleId: { type: DataTypes.STRING },
         role: {
             type: DataTypes.ENUM("user", "admin"),
             allowNull: false,
