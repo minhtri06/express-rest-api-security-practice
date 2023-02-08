@@ -43,7 +43,7 @@ const createRefreshToken = async (userId) => {
 }
 
 /**
- *
+ * Create auth tokens (access token and refresh token)
  * @param {number} userId
  * @returns {object}
  */
@@ -53,24 +53,22 @@ const createAuthTokens = async (userId) => {
     return { accessToken, refreshToken: refreshTokenIns.token }
 }
 
+/**
+ * Get refresh token Instance by token
+ * @param {string} token
+ * @returns {Promise<InstanceType<RefreshToken>>}
+ */
 const getRefreshTokenByToken = async (token) => {
     return RefreshToken.findOne({ where: { token } })
 }
 
 /**
- * Get refresh token and verify
+ * Decode token
  * @param {string} token
- * @returns {Promise<[InstanceType<RefreshToken>, object]>}
+ * @returns {object|null}
  */
-const getRefreshTokenAndVerify = async (token) => {
-    const payload = jwt.verify(token, SECRET_KEY)
-    if (payload.type !== REFRESH) {
-        return [null, payload]
-    }
-    const refreshToken = await RefreshToken.findOne({
-        where: { token, userId: payload.sub },
-    })
-    return [refreshToken, payload]
+const decodeToken = (token) => {
+    return jwt.decode(token, SECRET_KEY)
 }
 
 /**
@@ -82,13 +80,23 @@ const deleteAllRefreshTokensOfAUser = async (userId) => {
     RefreshToken.destroy({ where: { userId } })
 }
 
+/**
+ * is payload exp expired
+ * @param {number} exp
+ * @returns {boolean}
+ */
+const isPayloadExpExpired = (exp) => {
+    return exp < moment().unix()
+}
+
 const tokenService = {
     createAccessToken,
     createRefreshToken,
     createAuthTokens,
     getRefreshTokenByToken,
-    getRefreshTokenAndVerify,
+    decodeToken,
     deleteAllRefreshTokensOfAUser,
+    isPayloadExpExpired,
 }
 
 module.exports = tokenService

@@ -5,7 +5,7 @@ const envConfig = require("../config/env-config")
 const { ACCESS } = require("../utils").commonConstants
 const createError = require("http-errors")
 const { User } = require("../models")
-const { userService, blacklistUserService } = require("../services")
+const { userService } = require("../services")
 
 const jwtStrategy = new JwtStrategy(
     {
@@ -19,7 +19,7 @@ const jwtStrategy = new JwtStrategy(
                 throw createError.Unauthorized("Invalid token")
             }
             const user = await User.findByPk(payload.sub)
-            if (!user || (await blacklistUserService.checkUserIsInBlacklist(user.id))) {
+            if (!user) {
                 return done(null, false)
             }
             req.user = user

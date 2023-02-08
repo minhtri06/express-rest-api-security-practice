@@ -26,6 +26,7 @@ const logout = {
 
 const refreshToken = {
     [BODY]: Joi.object({
+        accessToken: Joi.string().required(),
         refreshToken: Joi.string().required(),
     }),
 }

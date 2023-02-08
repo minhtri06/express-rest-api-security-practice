@@ -28,8 +28,11 @@ const logout = async (req, res) => {
 
 /** @type {import("express").RequestHandler} */
 const refreshToken = async (req, res) => {
-    const [user, authTokens] = await authService.refreshAuthTokens(req.body.refreshToken)
-    return res.json({ user, authTokens })
+    const authTokens = await authService.refreshAuthTokens(
+        req.body.accessToken,
+        req.body.refreshToken
+    )
+    return res.json({ authTokens })
 }
 
 module.exports = { registerUser, login, loginByGoogle, logout, refreshToken }

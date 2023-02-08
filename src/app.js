@@ -4,13 +4,14 @@ const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
 const logger = require("morgan")
+const passport = require("passport")
+
 const router = require("./routes")
 const db = require("./models")
 const handleNotFound = require("./middlewares/handle-not-found")
 const handleException = require("./middlewares/handle-exception")
 const envConfig = require("./config/env-config")
 const { jwtStrategy, googlePlusTokenStrategy } = require("./middlewares/passport")
-const passport = require("passport")
 
 const app = express()
 
@@ -45,7 +46,7 @@ const start = async () => {
         await db.sequelize.sync()
         app.listen(
             envConfig.PORT,
-            console.log("😏 Server is running on port " + envConfig.PORT)
+            console.log("🧙‍ Server is running on port " + envConfig.PORT)
         )
     } catch (error) {
         console.log(error)

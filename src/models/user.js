@@ -3,11 +3,8 @@ const { Model, DataTypes } = require("sequelize")
 const sequelize = require("../config/sequelize")
 
 class User extends Model {
-    static associate({ RefreshToken, BlacklistUser }) {
+    static associate({ RefreshToken }) {
         this.hasMany(RefreshToken, {
-            foreignKey: "userId",
-        })
-        this.hasOne(BlacklistUser, {
             foreignKey: "userId",
         })
     }
@@ -27,7 +24,7 @@ class User extends Model {
 User.init(
     {
         name: { type: DataTypes.STRING, allowNull: false },
-        email: { type: DataTypes.STRING, allowNull: false },
+        email: { type: DataTypes.STRING, allowNull: false, unique: true },
         passwordHash: { type: DataTypes.STRING },
         avatar: DataTypes.STRING,
         googleId: { type: DataTypes.STRING },
@@ -40,12 +37,6 @@ User.init(
     {
         sequelize,
         modelName: "User",
-        indexes: [
-            {
-                unique: true,
-                fields: ["email"],
-            },
-        ],
     }
 )
 
