@@ -2,7 +2,7 @@
 
 ### About this project
 
-This project implements REST APIs using ExpressJS with some security features such at validation, authentication and authorization
+This project implements RESTful APIs using ExpressJS with some security features such at validation, authentication and authorization
 
 This project was inspired by this repository: https://github.com/hagopj13/node-express-boilerplate
 
