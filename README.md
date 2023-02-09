@@ -1,12 +1,12 @@
-## SECURITY PRACTICE WITH EXPRESS REST API
+# SECURITY PRACTICE WITH EXPRESS REST API
 
-### About this project
+## About this project
 
 This project implements RESTful APIs using ExpressJS with some security features such at validation, authentication and authorization
 
 This project was inspired by this repository: https://github.com/hagopj13/node-express-boilerplate
 
-### Main technologies
+## Main technologies
 
 -   NodeJS: Environment (v18.12.1)
 -   expressJS: The core of the server (v4.18.2)
